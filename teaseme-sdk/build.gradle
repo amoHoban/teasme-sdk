@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin: 'android-library'
 apply plugin: 'android-maven'
 
 repositories {
@@ -19,8 +19,8 @@ dependencies {
 
 android {
     defaultConfig {
-        versionCode 5
-        versionName "1.0.4"
+        versionCode 1
+        versionName "0.0.1"
     }
 
     project.archivesBaseName = "Teasme-SDK"
