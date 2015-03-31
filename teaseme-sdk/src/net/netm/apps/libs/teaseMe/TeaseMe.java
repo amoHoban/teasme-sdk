@@ -23,7 +23,7 @@ public class TeaseMe {
 
     public final static String API_NAMESPACE = "api";
 
-    public final static String API_BASE_URL = "http://teaseradmin.pec.test.net-m.net/teaseradmin";
+    public final static String API_BASE_URL = "http://teaseradmin.**.net/teaseradmin";
 
     public final static String API_PATH = "/screens";
 
