@@ -1,11 +1,11 @@
-package net.netm.apps.libs.teaseMe.webview.services.impl;
+package net.netm.apps.libs.teaseme.webview.services.impl;
 
 import java.util.Map;
 
-import net.netm.apps.libs.teaseMe.TeaseMe;
-import net.netm.apps.libs.teaseMe.services.TeasersLoadedCallback;
-import net.netm.apps.libs.teaseMe.utils.Utils;
-import net.netm.apps.libs.teaseMe.webview.services.WebViewTeasersSource;
+import net.netm.apps.libs.teaseme.TeaseMe;
+import net.netm.apps.libs.teaseme.services.TeasersLoadedCallback;
+import net.netm.apps.libs.teaseme.utils.Utils;
+import net.netm.apps.libs.teaseme.webview.services.WebViewTeasersSource;
 
 /**
  * Created by ahoban on 27.03.15.

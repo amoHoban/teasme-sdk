@@ -1,24 +1,24 @@
-package net.netm.apps.libs.teaseMe.handlers.impl;
+package net.netm.apps.libs.teaseme.handlers.impl;
+
+import android.app.Activity;
+
+import com.google.gson.JsonObject;
+
+import net.netm.apps.libs.teaseme.TeaseMe;
+import net.netm.apps.libs.teaseme.handlers.ActionHandler;
+import net.netm.apps.libs.teaseme.handlers.ActionType;
+import net.netm.apps.libs.teaseme.handlers.HandlerRegistry;
+import net.netm.apps.libs.teaseme.utils.BasicAsynkTask;
+
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
-
-import net.netm.apps.libs.teaseMe.TeaseMe;
-import net.netm.apps.libs.teaseMe.handlers.ActionHandler;
-import net.netm.apps.libs.teaseMe.handlers.ActionType;
-import net.netm.apps.libs.teaseMe.handlers.HandlerRegistry;
-import net.netm.apps.libs.teaseMe.utils.BasicAsynkTask;
-
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Activity;
 
 /**
  * Created by ahoban on 27.03.15.
@@ -39,13 +39,13 @@ public class TeaserActionHandlerRegistry implements HandlerRegistry {
     }
 
     @Override
-    public ActionHandler findHandlerFor(String actionType, String actionValue) {
+    public ActionHandler findHandlerFor(String actionType, String actionValue, Map<String, String> properties) {
 
         if (registeredHandlers.containsKey(ActionType.All))
             return registeredHandlers.get(ActionType.All);
 
         for (Map.Entry<ActionType, ActionHandler> entry : registeredHandlers.entrySet()) {
-            if (entry.getValue().canHandle(actionType))
+            if (entry.getValue().canHandle(actionType, actionValue, properties))
                 return entry.getValue();
         }
 
@@ -54,13 +54,12 @@ public class TeaserActionHandlerRegistry implements HandlerRegistry {
     }
 
 
-    @Override
     public void registerHandler(ActionType type, ActionHandler handler) {
         this.registeredHandlers.put(type, handler);
     }
 
     @Override
-    public void trackClick(final String actionValue, final String actionType) {
+    public void trackClick(final String actionValue, final String actionType, final Map<String, String> properties) {
 
         Callable<Void> callback = new Callable<Void>() {
             @Override
@@ -69,13 +68,16 @@ public class TeaserActionHandlerRegistry implements HandlerRegistry {
 
                 post.addHeader("content-type", "application/x-www-form-urlencoded");
 
-                JSONObject object = new JSONObject();
-
+                JsonObject object = new JsonObject();
 
                 try {
-                    object.put("actionType", actionType);
+                    object.addProperty("actionType", actionType);
 
-                    object.put("actionValue", actionValue);
+                    object.addProperty("actionValue", actionValue);
+
+                    for (Map.Entry<String, String> entry : properties.entrySet()) {
+                        object.addProperty(entry.getKey(), entry.getValue());
+                    }
 
                     StringEntity params = new StringEntity(object.toString());
 
@@ -83,7 +85,6 @@ public class TeaserActionHandlerRegistry implements HandlerRegistry {
 
                     new DefaultHttpClient().execute(post);
                 } catch (UnsupportedEncodingException e1) {
-                } catch (JSONException j) {
                 } catch (IOException e) {
 
                 } finally {
@@ -91,7 +92,7 @@ public class TeaserActionHandlerRegistry implements HandlerRegistry {
 
                 }
                 return null;
-            };
+            }
         };
 
         new BasicAsynkTask<Void>(callback).execute();

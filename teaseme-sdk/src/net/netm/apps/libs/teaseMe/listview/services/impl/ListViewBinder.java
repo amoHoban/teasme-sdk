@@ -1,4 +1,4 @@
-package net.netm.apps.libs.teaseMe.listview.services.impl;
+package net.netm.apps.libs.teaseme.listview.services.impl;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -14,19 +14,23 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
-import net.netm.apps.libs.teaseMe.components.TeaserListAdapter;
-import net.netm.apps.libs.teaseMe.handlers.ActionHandler;
-import net.netm.apps.libs.teaseMe.handlers.HandlerRegistry;
-import net.netm.apps.libs.teaseMe.handlers.impl.TeaserActionHandlerRegistry;
-import net.netm.apps.libs.teaseMe.models.FilteredScreen;
-import net.netm.apps.libs.teaseMe.models.Teaser;
-import net.netm.apps.libs.teaseMe.services.ItemLayoutMapper;
-import net.netm.apps.libs.teaseMe.services.ScreenBinder;
-import net.netm.apps.libs.teaseMe.services.TeasersLoadedCallback;
-import net.netm.apps.libs.teaseMe.services.impl.DefaultItemLayoutMapper;
-import net.netm.apps.libs.teaseMe.services.impl.TeaserScreensService;
-import net.netm.apps.libs.teaseMe.utils.BasicScreenConfiguration;
-import net.netm.apps.libs.teaseMe.utils.Utils;
+import com.squareup.picasso.Transformation;
+
+import net.netm.apps.libs.teaseme.components.TeaserListAdapter;
+import net.netm.apps.libs.teaseme.handlers.ActionHandler;
+import net.netm.apps.libs.teaseme.handlers.HandlerRegistry;
+import net.netm.apps.libs.teaseme.handlers.impl.TeaserActionHandlerRegistry;
+import net.netm.apps.libs.teaseme.models.FilteredScreen;
+import net.netm.apps.libs.teaseme.models.Teaser;
+import net.netm.apps.libs.teaseme.services.ItemLayoutMapper;
+import net.netm.apps.libs.teaseme.services.ScreenBinder;
+import net.netm.apps.libs.teaseme.services.TeasersLoadedCallback;
+import net.netm.apps.libs.teaseme.services.impl.DefaultItemLayoutMapper;
+import net.netm.apps.libs.teaseme.services.impl.TeaserScreensService;
+import net.netm.apps.libs.teaseme.utils.BasicScreenConfiguration;
+import net.netm.apps.libs.teaseme.utils.Utils;
+
+import java.util.List;
 
 /**
  * Created by ahoban on 26.03.15.
@@ -38,19 +42,24 @@ public class ListViewBinder implements ScreenBinder<AbsListView> {
     private final LayoutInflater inflater;
     private final ItemLayoutMapper itemLayoutMapper;
     private final Context context;
-    private final net.netm.apps.libs.teaseMe.listview.services.impl.ListViewScreenConfiguration configuration;
+    private final net.netm.apps.libs.teaseme.listview.services.impl.ListViewScreenConfiguration configuration;
     private final AbsListView view;
 
-    private final HandlerRegistry handlerRegistry;
+    /**
+     * List if {@link Transformation} transformations to be applied to all images
+     */
+    private List<? extends Transformation> transformers;
+    private HandlerRegistry handlerRegistry;
+    private ActionHandler actionHandler;
 
-    public ListViewBinder(net.netm.apps.libs.teaseMe.listview.services.impl.ListViewScreenConfiguration configuration) {
+    public ListViewBinder(net.netm.apps.libs.teaseme.listview.services.impl.ListViewScreenConfiguration configuration) {
         this.configuration = configuration;
         this.view = (AbsListView) configuration.getView();
         this.context = configuration.getContext();
         this.teaserSource = new TeaserScreensService(context, configuration.getScreenId(), configuration.getParams(), configuration.getUserAgent());
         this.itemLayoutMapper = new DefaultItemLayoutMapper(context);
         this.inflater = LayoutInflater.from(context);
-        this.handlerRegistry = new TeaserActionHandlerRegistry((Activity) context);
+        this.handlerRegistry = new TeaserActionHandlerRegistry(configuration.getContext());
         this.bindView();
     }
 
@@ -59,10 +68,14 @@ public class ListViewBinder implements ScreenBinder<AbsListView> {
         itemLayoutMapper = builder.itemLayoutMapper;
         configuration = builder.configuration;
         context = configuration.getContext();
-        handlerRegistry = builder.handlerRegistry;
+        actionHandler = builder.actionHandler;
         view = (AbsListView) configuration.getView();
         teaserSource = new TeaserScreensService(context, configuration.getScreenId(), configuration.getParams(), configuration.getUserAgent());
         inflater = LayoutInflater.from(context);
+        this.handlerRegistry = new TeaserActionHandlerRegistry(configuration.getContext());
+        if (builder.imageTransformers != null)
+            this.transformers = builder.imageTransformers;
+
         this.bindView();
     }
 
@@ -89,31 +102,52 @@ public class ListViewBinder implements ScreenBinder<AbsListView> {
     public static final class Builder {
 
         private ItemLayoutMapper itemLayoutMapper;
-        private final net.netm.apps.libs.teaseMe.listview.services.impl.ListViewScreenConfiguration configuration;
-        private HandlerRegistry handlerRegistry;
+        private final net.netm.apps.libs.teaseme.listview.services.impl.ListViewScreenConfiguration configuration;
+        private ActionHandler actionHandler;
+        private List<? extends Transformation> imageTransformers;
 
-        public Builder(net.netm.apps.libs.teaseMe.listview.services.impl.ListViewScreenConfiguration configuration) {
+        public Builder(net.netm.apps.libs.teaseme.listview.services.impl.ListViewScreenConfiguration configuration) {
             this.configuration = configuration;
         }
 
+        /**
+         * <p>
+         * add your own layout mapper to determine layout for all teaser layouts, teaser images and teaser content </p>
+         * @param itemLayoutMapper
+         * @return
+         */
         public Builder withItemLayoutMapper(ItemLayoutMapper itemLayoutMapper) {
             this.itemLayoutMapper = itemLayoutMapper;
             return this;
         }
 
-        public Builder withHandlerRegistry(HandlerRegistry handlerRegistry) {
-            this.handlerRegistry = handlerRegistry;
+        /**
+         * <p>
+         * add a list of {@link com.squareup.picasso.Transformation} image transformations to be applied to all images</p>
+         * @param transformers
+         * @return
+         */
+        public Builder withImageTransformers(List<? extends Transformation> transformers) {
+            this.imageTransformers = transformers;
+            return this;
+        }
+
+        /**
+         * <p>add a custom handler for handling teaser actions on your own, return true in the handler
+         * to prevent other handlers from getting triggered</p>
+         *
+         **/
+        public Builder withCustomActionHandler(ActionHandler actionHandler) {
+            this.actionHandler = actionHandler;
             return this;
         }
 
 
         public ListViewBinder build() {
 
-            if (this.handlerRegistry == null)
-                this.handlerRegistry = new TeaserActionHandlerRegistry(configuration.getContext());
-
             if (this.itemLayoutMapper == null)
                 this.itemLayoutMapper = new DefaultItemLayoutMapper(configuration.getContext());
+
 
             return new ListViewBinder(this);
         }
@@ -122,7 +156,7 @@ public class ListViewBinder implements ScreenBinder<AbsListView> {
 
     private void createAdapter(final FilteredScreen screen) {
 
-        TeaserListAdapter adapter = new TeaserListAdapter(screen, itemLayoutMapper, configuration);
+        TeaserListAdapter adapter = new TeaserListAdapter(screen, itemLayoutMapper, configuration, transformers);
 
         ((AdapterView) view).setAdapter(adapter);
 
@@ -131,21 +165,27 @@ public class ListViewBinder implements ScreenBinder<AbsListView> {
         view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ActionHandler handler = null;
+
 
                 Teaser item = null;
 
-                try {
-                    item = screen.getTeasers().get(position);
+                item = screen.getTeasers().get(position);
 
-                    handlerRegistry.trackClick(item.getActionType(), item.getActionValue());
+                if (item == null)
+                    return;
 
-                    handlerRegistry.findHandlerFor(item.getActionType(), item.getActionValue()).handle(item.getActionType(), item.getActionValue());
-                } catch (NullPointerException e) {
+                handlerRegistry.trackClick(item.getActionType(), item.getActionValue(), item.getProperties());
 
-                    // request teaser by id again?
+                if (actionHandler != null) {
+                    if (actionHandler.canHandle(item.getActionType(), item.getActionValue(), item.getProperties())) {
 
+                        if (actionHandler.handle(item.getActionType(), item.getActionValue(), item.getProperties())) {
+                            return;
+                        }
+                    }
                 }
+
+                handlerRegistry.findHandlerFor(item.getActionType(), item.getActionValue(), item.getProperties()).handle(item.getActionType(), item.getActionValue(), item.getProperties());
 
             }
         });
@@ -171,7 +211,7 @@ public class ListViewBinder implements ScreenBinder<AbsListView> {
     }
 
     @TargetApi(11)
-    private void addLoadersForNewApi(final Context context, final net.netm.apps.libs.teaseMe.listview.services.impl.ListViewScreenConfiguration configuration) {
+    private void addLoadersForNewApi(final Context context, final net.netm.apps.libs.teaseme.listview.services.impl.ListViewScreenConfiguration configuration) {
         ((Activity) context).getLoaderManager().initLoader(Utils.safeLongToInt(configuration.getScreenId()), null, new android.app.LoaderManager.LoaderCallbacks<FilteredScreen>() {
             @Override
             public android.content.Loader<FilteredScreen> onCreateLoader(int id, Bundle args) {
@@ -196,7 +236,7 @@ public class ListViewBinder implements ScreenBinder<AbsListView> {
         }).forceLoad();
     }
 
-    private void addLoadersForOldApi(final Context context, final net.netm.apps.libs.teaseMe.listview.services.impl.ListViewScreenConfiguration configuration) {
+    private void addLoadersForOldApi(final Context context, final net.netm.apps.libs.teaseme.listview.services.impl.ListViewScreenConfiguration configuration) {
 
         ((FragmentActivity) context).getSupportLoaderManager().initLoader(Utils.safeLongToInt(configuration.getScreenId()), null, new LoaderManager.LoaderCallbacks<FilteredScreen>() {
             @Override

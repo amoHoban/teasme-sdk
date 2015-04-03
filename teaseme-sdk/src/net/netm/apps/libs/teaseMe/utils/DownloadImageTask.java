@@ -1,8 +1,8 @@
-package net.netm.apps.libs.teaseMe.utils;
+package net.netm.apps.libs.teaseme.utils;
 
 import java.io.InputStream;
 
-import net.netm.apps.libs.teaseMe.TeaseMe;
+import net.netm.apps.libs.teaseme.TeaseMe;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

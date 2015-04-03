@@ -1,4 +1,4 @@
-package net.netm.apps.libs.teaseMe.services;
+package net.netm.apps.libs.teaseme.services;
 
 import android.view.View;
 
@@ -14,7 +14,7 @@ public interface TeasersLoadedCallback {
      * the items from json </p>
      *
      * @param screenId id of the screen which was bound to the view
-     * @param AbsListViewWebView parameter will be the loaded webview or the loaded AbsListView with populated see {@link net.netm.apps.libs.teaseMe.components.TeaserListAdapter}
+     * @param AbsListViewWebView parameter will be the loaded webview or the loaded AbsListView with populated see {@link net.netm.apps.libs.teaseme.components.TeaserListAdapter}
      */
     public void teasersLoaded(Long screenId, View AbsListViewWebView);
 
@@ -25,7 +25,7 @@ public interface TeasersLoadedCallback {
      * the items from json </p>
      *
      * @param screenId id of the screen which was bound to the view
-     * @param AbsListViewWebView parameter will be the loaded webview or the loaded AbsListView with populated {@link net.netm.apps.libs.teaseMe.components.TeaserListAdapter}
+     * @param AbsListViewWebView parameter will be the loaded webview or the loaded AbsListView with populated {@link net.netm.apps.libs.teaseme.components.TeaserListAdapter}
      * @param e the cause of the error
      */
     public void teasersErrored(Long screenId, View AbsListViewWebView, Throwable e);

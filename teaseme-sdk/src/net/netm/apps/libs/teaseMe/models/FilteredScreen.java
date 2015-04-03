@@ -1,4 +1,4 @@
-package net.netm.apps.libs.teaseMe.models;
+package net.netm.apps.libs.teaseme.models;
 
 import java.util.ArrayList;
 import java.util.Date;

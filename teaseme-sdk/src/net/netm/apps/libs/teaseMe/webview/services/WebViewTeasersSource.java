@@ -1,4 +1,4 @@
-package net.netm.apps.libs.teaseMe.webview.services;
+package net.netm.apps.libs.teaseme.webview.services;
 
 /**
  * Created by ahoban on 26.03.15.

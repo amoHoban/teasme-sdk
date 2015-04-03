@@ -1,4 +1,4 @@
-package net.netm.apps.libs.teaseMe.services.impl;
+package net.netm.apps.libs.teaseme.services.impl;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import net.netm.apps.libs.teaseMe.TeaseMe;
-import net.netm.apps.libs.teaseMe.models.FilteredScreen;
-import net.netm.apps.libs.teaseMe.utils.UserAgentUtils;
-import net.netm.apps.libs.teaseMe.utils.Utils;
+import net.netm.apps.libs.teaseme.TeaseMe;
+import net.netm.apps.libs.teaseme.models.FilteredScreen;
+import net.netm.apps.libs.teaseme.utils.UserAgentUtils;
+import net.netm.apps.libs.teaseme.utils.Utils;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;

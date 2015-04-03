@@ -1,10 +1,10 @@
-package net.netm.apps.libs.teaseMe.services.impl;
+package net.netm.apps.libs.teaseme.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.netm.apps.libs.teaseMe.utils.MySQLiteHelper;
-import net.netm.apps.libs.teaseMe.utils.Utils;
+import net.netm.apps.libs.teaseme.utils.MySQLiteHelper;
+import net.netm.apps.libs.teaseme.utils.Utils;
 
 import org.json.JSONObject;
 

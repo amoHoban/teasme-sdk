@@ -1,4 +1,4 @@
-package net.netm.apps.libs.teaseMe.handlers;
+package net.netm.apps.libs.teaseme.handlers;
 
 import java.util.Map;
 
@@ -13,25 +13,19 @@ public interface ActionHandler {
      * When can this handler handle the action?
      *
      * @param actionType
-     * @return
+     * @param properties {@link net.netm.apps.libs.teaseme.models.Teaser#getProperties()} teaser properties
+     * @return true to stop handling with different handlers
      */
-    public boolean canHandle(String actionType);
-
-    /**
-     * Handle the action
-     *
-     * @param actionType the teaserActionType
-     * @param actionValue the teaserActionValue
-     */
-    public void handle(String actionType, String actionValue);
+    public boolean canHandle(String actionType, String actionValue, Map<String, String> properties);
 
     /**
      * If options are passed, handle the action here
      *
      * @param actionType  the teaserActionType
      * @param actionValue the teaserActionValue
-     * @param options additional options passed
+     * @param properties {@link net.netm.apps.libs.teaseme.models.Teaser#getProperties()} teaser properties
+     * @return true to stop handling with different handlers
      */
-    public void handle(String actionType, String actionValue, Map<String, String> options);
+    public boolean handle(String actionType, String actionValue, Map<String, String> properties);
 
 }

@@ -1,4 +1,4 @@
-package net.netm.apps.libs.teaseMe.exceptions;
+package net.netm.apps.libs.teaseme.exceptions;
 
 /**
  * Created by ahoban on 29.03.15.

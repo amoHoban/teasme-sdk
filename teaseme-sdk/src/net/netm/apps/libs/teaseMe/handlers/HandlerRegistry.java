@@ -1,4 +1,6 @@
-package net.netm.apps.libs.teaseMe.handlers;
+package net.netm.apps.libs.teaseme.handlers;
+
+import java.util.Map;
 
 /**
  * Created by ahoban on 27.03.15.
@@ -11,19 +13,14 @@ public interface HandlerRegistry {
      *
      * @param actionType
      * @param actionValue
-     * @return
+     * @param properties Teaser Properties
+     * @return the responsible ActionHandler
      */
-    public ActionHandler findHandlerFor(String actionType, String actionValue);
+    public ActionHandler findHandlerFor(String actionType, String actionValue, Map<String,String> properties);
 
-    /**
-     * <p>register a handler</p>
-     * @param type
-     * @param handler
-     */
-    public void registerHandler(ActionType type, ActionHandler handler);
 
     /**
      * track clicks
      */
-    public void trackClick(String actionType, String actionValue);
+    public void trackClick(String actionType, String actionValue, Map<String,String> properties);
 }

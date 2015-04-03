@@ -78,7 +78,7 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
         /**
          * Gridview with all custom options
          */
-        /*
+    /*
         Map<String, String> params = new HashMap<String, String>();
 
         params.put(TeaserFilterParameter.FSK.name(), "18");

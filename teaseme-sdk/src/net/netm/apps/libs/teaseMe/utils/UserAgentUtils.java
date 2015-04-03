@@ -1,6 +1,4 @@
-package net.netm.apps.libs.teaseMe.utils;
-
-import java.lang.reflect.Constructor;
+package net.netm.apps.libs.teaseme.utils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -8,13 +6,15 @@ import android.os.Build;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import java.lang.reflect.Constructor;
+
 /**
  * Created by ahoban on 26.03.15.
  */
 public class UserAgentUtils {
 
     // You may uncomment next line if using Android Annotations library, otherwise just be sure to run it in on the UI thread
-	public static String getDefaultUserAgentString(Context context) {
+    public static String getDefaultUserAgentString(Context context) {
         if (Build.VERSION.SDK_INT >= 17) {
             return NewApiWrapper.getDefaultUserAgent(context);
         }

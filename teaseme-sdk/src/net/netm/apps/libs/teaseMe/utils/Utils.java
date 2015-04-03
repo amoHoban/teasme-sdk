@@ -1,14 +1,4 @@
-package net.netm.apps.libs.teaseMe.utils;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Map;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+package net.netm.apps.libs.teaseme.utils;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -16,6 +6,16 @@ import android.app.Service;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Map;
 
 /**
  * Created by ahoban on 27.03.15.
@@ -47,7 +47,7 @@ public class Utils {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB) // API 11
     public static void startTask(AsyncTask asyncTask, String... params) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+            asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object[]) params);
         else
             asyncTask.execute(params);
     }

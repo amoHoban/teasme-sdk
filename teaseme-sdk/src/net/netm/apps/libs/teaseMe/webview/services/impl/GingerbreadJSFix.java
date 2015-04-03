@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
-package net.netm.apps.libs.teaseMe.webview.services.impl;
+package net.netm.apps.libs.teaseme.webview.services.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

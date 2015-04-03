@@ -1,9 +1,9 @@
-package net.netm.apps.libs.teaseMe.utils;
-
-import java.util.Map;
+package net.netm.apps.libs.teaseme.utils;
 
 import android.app.Activity;
 import android.view.View;
+
+import java.util.Map;
 
 /**
  * Created by ahoban on 29.03.15.
@@ -16,7 +16,7 @@ public class BasicScreenConfiguration {
 
     private final View view;
 
-    private Map<String,String> params;
+    private Map<String, String> params;
 
 
     public BasicScreenConfiguration(Activity context, long screenId, View view) {

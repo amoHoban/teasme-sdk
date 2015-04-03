@@ -1,12 +1,12 @@
-package net.netm.apps.libs.teaseMe.utils;
-
-import java.util.concurrent.Callable;
+package net.netm.apps.libs.teaseme.utils;
 
 import android.os.AsyncTask;
 
+import java.util.concurrent.Callable;
+
 /**
  * AsynkTaskHelper that can be called with a {@link java.util.concurrent.Callable Callable} as callback
- *
+ * <p/>
  * Created by ahoban on 30.03.15.
  */
 public class BasicAsynkTask<T> extends AsyncTask<String, T, T> {
@@ -14,7 +14,6 @@ public class BasicAsynkTask<T> extends AsyncTask<String, T, T> {
     private final Callable<T> callback;
 
     /**
-     *
      * @param callable executed in every case
      */
     public BasicAsynkTask(Callable<T> callable) {
@@ -25,8 +24,7 @@ public class BasicAsynkTask<T> extends AsyncTask<String, T, T> {
     protected T doInBackground(String... params) {
         try {
             return callback.call();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }

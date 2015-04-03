@@ -1,6 +1,6 @@
-package net.netm.apps.libs.teaseMe.webview;
+package net.netm.apps.libs.teaseme.webview;
 
-import net.netm.apps.libs.teaseMe.utils.BasicScreenConfiguration;
+import net.netm.apps.libs.teaseme.utils.BasicScreenConfiguration;
 import android.app.Activity;
 import android.view.View;
 

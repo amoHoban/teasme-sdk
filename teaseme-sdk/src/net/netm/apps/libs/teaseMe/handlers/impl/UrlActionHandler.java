@@ -1,9 +1,9 @@
-package net.netm.apps.libs.teaseMe.handlers.impl;
+package net.netm.apps.libs.teaseme.handlers.impl;
 
 import java.util.Map;
 
-import net.netm.apps.libs.teaseMe.handlers.ActionHandler;
-import net.netm.apps.libs.teaseMe.handlers.ActionType;
+import net.netm.apps.libs.teaseme.handlers.ActionHandler;
+import net.netm.apps.libs.teaseme.handlers.ActionType;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -21,26 +21,13 @@ public class UrlActionHandler implements ActionHandler {
     }
 
     @Override
-    public boolean canHandle(String actionType) {
+    public boolean canHandle(String actionType, String actionValue, Map<String, String> options) {
         return actionType != null && actionType.equalsIgnoreCase(ActionType.Link.name());
     }
 
-    @Override
-    public void handle(String actionType, String actionValue) {
-
-        Intent viewIntent = buildIntent(actionValue);
-
-        try {
-            activity.startActivity(viewIntent);
-        }
-        catch(Exception e) {
-            Log.e(this.getClass().getPackage().getName(), "Could not start intent : " + e);
-        }
-
-    }
 
     @Override
-    public void handle(String actionType, String actionValue, Map<String, String> options) {
+    public boolean handle(String actionType, String actionValue, Map<String, String> options) {
 
         Intent viewIntent = buildIntent(actionValue);
 
@@ -51,6 +38,8 @@ public class UrlActionHandler implements ActionHandler {
         Log.d(activity.getPackageName(), "Starting intent " + viewIntent);
 
         activity.startActivity(viewIntent);
+
+        return true;
 
     }
 

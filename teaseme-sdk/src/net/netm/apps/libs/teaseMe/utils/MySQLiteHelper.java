@@ -1,4 +1,4 @@
-package net.netm.apps.libs.teaseMe.utils;
+package net.netm.apps.libs.teaseme.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -39,4 +39,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-} 
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.w(MySQLiteHelper.class.getName(),
+                "Downgrading database from version " + oldVersion + " to "
+                        + newVersion + ", which will destroy all old data");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCREENS);
+        onCreate(db);
+    }
+}

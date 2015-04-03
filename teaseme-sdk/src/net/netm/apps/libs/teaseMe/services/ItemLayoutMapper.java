@@ -1,6 +1,8 @@
-package net.netm.apps.libs.teaseMe.services;
+package net.netm.apps.libs.teaseme.services;
 
-import net.netm.apps.libs.teaseMe.models.Teaser;
+import com.squareup.picasso.Transformation;
+
+import net.netm.apps.libs.teaseme.models.Teaser;
 
 /**
  * Created by ahoban on 26.03.15.
@@ -33,5 +35,13 @@ public interface ItemLayoutMapper {
      * @return
      */
     public Integer getContentViewId(Teaser item, int position);
+
+    /**
+     * overrides other transformations!
+     *
+     * @param item     teaser containing image and its aspect ratio, so you can apply custom transformations based on aspect ratio
+     * @param position
+     */
+    public Transformation getImageTransformationFor(Teaser item, int position);
 
 }

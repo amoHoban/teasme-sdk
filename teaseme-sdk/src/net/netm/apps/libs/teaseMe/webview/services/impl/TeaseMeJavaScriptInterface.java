@@ -1,20 +1,21 @@
-package net.netm.apps.libs.teaseMe.webview.services.impl;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import net.netm.apps.libs.teaseMe.handlers.ActionHandler;
-import net.netm.apps.libs.teaseMe.handlers.HandlerRegistry;
-
-import org.apache.commons.lang3.StringUtils;
+package net.netm.apps.libs.teaseme.webview.services.impl;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import net.netm.apps.libs.teaseme.handlers.ActionHandler;
+import net.netm.apps.libs.teaseme.handlers.HandlerRegistry;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ahoban on 27.03.15.
@@ -27,12 +28,15 @@ public class TeaseMeJavaScriptInterface {
 
     final HandlerRegistry handlerRegistry;
 
+    private ActionHandler actionHandler;
+
     /**
      * Instantiate the interface and set the context
      */
-    public TeaseMeJavaScriptInterface(Context c, HandlerRegistry hR) {
+    public TeaseMeJavaScriptInterface(Context c, HandlerRegistry hR, ActionHandler aH) {
         mContext = c;
         handlerRegistry = hR;
+        actionHandler = aH;
     }
 
 
@@ -53,32 +57,54 @@ public class TeaseMeJavaScriptInterface {
      * @param actionValue
      */
     @JavascriptInterface
-    public void handleEvent(String actionType, String actionValue, String jsonOptions) {
+    public void sendEvent(String actionType, String actionValue, String jsonOptions) {
 
         ActionHandler handler;
 
-        if (jsonOptions == null || StringUtils.isEmpty(jsonOptions)) {
+        Map<String, String> options = new HashMap<String, String>();
 
-            handleEvent(actionType, actionValue);
+        Gson gson = new Gson();
 
-        } else {
+        Map<String, String> map = new HashMap<String, String>();
 
-            Gson gson = new Gson();
+        Type mapType = new TypeToken<HashMap<String, String>>() {
+        }.getType();
 
-            Map<String, String> map = new HashMap<String, String>();
+        try {
 
-            Map<String, String> options = gson.fromJson(jsonOptions, map.getClass());
+            options = gson.fromJson(jsonOptions, mapType);
+        } catch (Exception e) {
 
-            Log.d(this.getClass().getPackage().getName(), "Attempting to find a handler for click on teaser with actionType : " + actionType + " actionValue :" + actionValue);
-
-            handlerRegistry.findHandlerFor(actionType, actionValue).handle(actionType, actionValue, options);
         }
+
+        Log.d(this.getClass().getPackage().getName(), "Attempting to find a handler for click on teaser with actionType : " + actionType + " actionValue :" + actionValue + options.toString());
+
+
+        handlerRegistry.trackClick(actionType, actionValue, options);
+
+        if (actionHandler != null) {
+            if (actionHandler.canHandle(actionType, actionValue, options)) {
+
+                if (actionHandler.handle(actionType, actionValue, options)) {
+                    return;
+                }
+            }
+        }
+        handlerRegistry.findHandlerFor(actionType, actionValue, options).handle(actionType, actionValue, options);
+
 
     }
 
     @JavascriptInterface
-    public void handleEvent(String actionType, String actionValue) {
-        handlerRegistry.findHandlerFor(actionType, actionValue).handle(actionType, actionValue);
+    public void sendEvent(String actionType, String actionValue) {
+        Log.e("SOMETHING ekse is", actionType);
 
+        this.sendEvent(actionType,actionValue, "{}");
+    }
+
+    @JavascriptInterface
+    public void sendEvent(String something) {
+        Log.e("SOMETHING is", something);
+        Toast.makeText(mContext, "SOMETHIIIING " + something, Toast.LENGTH_SHORT);
     }
 }

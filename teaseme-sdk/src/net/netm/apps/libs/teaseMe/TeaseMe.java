@@ -1,4 +1,4 @@
-package net.netm.apps.libs.teaseMe;
+package net.netm.apps.libs.teaseme;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;

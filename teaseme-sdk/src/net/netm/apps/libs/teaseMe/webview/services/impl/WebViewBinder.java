@@ -1,14 +1,15 @@
-package net.netm.apps.libs.teaseMe.webview.services.impl;
+package net.netm.apps.libs.teaseme.webview.services.impl;
 
-import net.netm.apps.libs.teaseMe.TeaseMe;
-import net.netm.apps.libs.teaseMe.exceptions.WebViewScreenLoadException;
-import net.netm.apps.libs.teaseMe.handlers.HandlerRegistry;
-import net.netm.apps.libs.teaseMe.handlers.impl.TeaserActionHandlerRegistry;
-import net.netm.apps.libs.teaseMe.services.ScreenBinder;
-import net.netm.apps.libs.teaseMe.services.TeasersLoadedCallback;
-import net.netm.apps.libs.teaseMe.utils.BasicScreenConfiguration;
-import net.netm.apps.libs.teaseMe.webview.WebViewScreenConfiguration;
-import net.netm.apps.libs.teaseMe.webview.services.WebViewTeasersSource;
+import net.netm.apps.libs.teaseme.TeaseMe;
+import net.netm.apps.libs.teaseme.exceptions.WebViewScreenLoadException;
+import net.netm.apps.libs.teaseme.handlers.ActionHandler;
+import net.netm.apps.libs.teaseme.handlers.HandlerRegistry;
+import net.netm.apps.libs.teaseme.handlers.impl.TeaserActionHandlerRegistry;
+import net.netm.apps.libs.teaseme.services.ScreenBinder;
+import net.netm.apps.libs.teaseme.services.TeasersLoadedCallback;
+import net.netm.apps.libs.teaseme.utils.BasicScreenConfiguration;
+import net.netm.apps.libs.teaseme.webview.WebViewScreenConfiguration;
+import net.netm.apps.libs.teaseme.webview.services.WebViewTeasersSource;
 import android.content.Context;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -23,13 +24,15 @@ public class WebViewBinder implements ScreenBinder<WebView> {
 
 	private final Context context;
 
-    private final HandlerRegistry handlerRegistry;
-
     private final WebViewTeasersSource teaserSource;
 
     private final WebViewScreenConfiguration configuration;
 
     private final WebView view;
+
+    private HandlerRegistry handlerRegistry;
+
+    private ActionHandler actionHandler;
 
     private WebViewBinder(Builder builder) {
 
@@ -37,11 +40,13 @@ public class WebViewBinder implements ScreenBinder<WebView> {
 
         context = configuration.getContext();
 
-        handlerRegistry = builder.handlerRegistry;
+        handlerRegistry = new TeaserActionHandlerRegistry(configuration.getContext());
 
         teaserSource = new DefaultWebviewTeasersSource(configuration.getScreenId(), configuration.getTemplateId(), configuration.getParams());
 
         view = (WebView) configuration.getView();
+
+        actionHandler = builder.actionHandler;
 
         this.bindView();
     }
@@ -53,11 +58,11 @@ public class WebViewBinder implements ScreenBinder<WebView> {
 
         webSettings.setJavaScriptEnabled(true);
 
-        view.addJavascriptInterface(new TeaseMeJavaScriptInterface(context, handlerRegistry), TeaseMeJavaScriptInterface.JAVASCRIPT_INTERFACE_NAME);
+        view.addJavascriptInterface(new TeaseMeJavaScriptInterface(context, handlerRegistry, actionHandler), TeaseMeJavaScriptInterface.JAVASCRIPT_INTERFACE_NAME);
         
         GingerbreadJSFix fix = new GingerbreadJSFix();
 
-        fix.fixWebViewJSInterface(view, new TeaseMeJavaScriptInterface(context, handlerRegistry), TeaseMeJavaScriptInterface.JAVASCRIPT_INTERFACE_NAME, "_gbjsfix:");
+        fix.fixWebViewJSInterface(view, new TeaseMeJavaScriptInterface(context, handlerRegistry, actionHandler), TeaseMeJavaScriptInterface.JAVASCRIPT_INTERFACE_NAME, "_gbjsfix:");
         
         view.setWebViewClient(new WebViewClient() {
 
@@ -103,8 +108,8 @@ public class WebViewBinder implements ScreenBinder<WebView> {
 
 
     public static final class Builder {
-        private HandlerRegistry handlerRegistry;
         private final WebViewScreenConfiguration configuration;
+        private ActionHandler actionHandler;
 
         public Builder(WebViewScreenConfiguration configuration) {
             this.configuration = configuration;
@@ -112,23 +117,19 @@ public class WebViewBinder implements ScreenBinder<WebView> {
 
 
         /**
-         * <p>add a handlerRegistry for handling teaser actions on your own,
-         * see {@link net.netm.apps.libs.teaseMe.handlers.impl.TeaserActionHandlerRegistry#registerHandler(net.netm.apps.libs.teaseMe.handlers.ActionType, net.netm.apps.libs.teaseMe.handlers.ActionHandler)} TeaserActionHandlerRegistry</p>
+         * <p>add a custom handler for handling teaser actions on your own, return true in the handler
+         * to prevent other handlers from getting triggered</p>
          *
-         * @param handlerRegistry
+         * @param actionHandler
          * @return
          */
-        public Builder withHandlerRegistry(HandlerRegistry handlerRegistry) {
-            this.handlerRegistry = handlerRegistry;
+        public Builder withCustomActionHandler(ActionHandler actionHandler) {
+            this.actionHandler = actionHandler;
             return this;
         }
 
 
         public WebViewBinder build() {
-
-            if (this.handlerRegistry == null)
-                this.handlerRegistry = new TeaserActionHandlerRegistry(configuration.getContext());
-
             return new WebViewBinder(this);
         }
     }

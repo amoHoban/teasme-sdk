@@ -1,4 +1,4 @@
-package net.netm.apps.libs.teaseMe.handlers;
+package net.netm.apps.libs.teaseme.handlers;
 
 /**
  * Created by ahoban on 27.03.15.
