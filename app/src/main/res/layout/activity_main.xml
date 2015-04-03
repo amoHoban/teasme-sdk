@@ -11,15 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="112dp" />
 
-    <GridView
+    <ListView
         android:id="@+id/gridView1"
         android:layout_width="match_parent"
         android:layout_height="225dp"
         android:layout_gravity="bottom"
-        android:numColumns="auto_fit"
+        android:numColumns="2"
         android:layout_marginTop="230dp">
 
-    </GridView>
+    </ListView>
 
     <WebView
         android:id="@+id/webView2"

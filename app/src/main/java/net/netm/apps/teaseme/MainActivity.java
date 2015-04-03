@@ -1,26 +1,33 @@
 package net.netm.apps.teaseme;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import net.netm.apps.libs.teaseMe.TeaseMe;
-import net.netm.apps.libs.teaseMe.handlers.ActionHandler;
-import net.netm.apps.libs.teaseMe.handlers.ActionType;
-import net.netm.apps.libs.teaseMe.handlers.impl.TeaserActionHandlerRegistry;
-import net.netm.apps.libs.teaseMe.listview.services.impl.ListViewBinder;
-import net.netm.apps.libs.teaseMe.listview.services.impl.ListViewScreenConfiguration;
-import net.netm.apps.libs.teaseMe.services.TeasersLoadedCallback;
-import net.netm.apps.libs.teaseMe.webview.WebViewScreenConfiguration;
-import net.netm.apps.libs.teaseMe.webview.services.impl.WebViewBinder;
+import com.squareup.picasso.Transformation;
 
+import net.netm.apps.libs.teaseme.TeaseMe;
+import net.netm.apps.libs.teaseme.handlers.ActionHandler;
+import net.netm.apps.libs.teaseme.listview.services.impl.ListViewBinder;
+import net.netm.apps.libs.teaseme.listview.services.impl.ListViewScreenConfiguration;
+import net.netm.apps.libs.teaseme.models.Teaser;
+import net.netm.apps.libs.teaseme.services.ItemLayoutMapper;
+import net.netm.apps.libs.teaseme.services.TeaserFilterParameter;
+import net.netm.apps.libs.teaseme.services.TeasersLoadedCallback;
+import net.netm.apps.libs.teaseme.utils.transformations.CircleTransformation;
+import net.netm.apps.libs.teaseme.utils.transformations.CropSquareTransformation;
+import net.netm.apps.libs.teaseme.webview.WebViewScreenConfiguration;
+import net.netm.apps.libs.teaseme.webview.services.impl.WebViewBinder;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 
-public class MainActivity extends ActionBarActivity implements TeasersLoadedCallback{
+public class MainActivity extends ActionBarActivity implements TeasersLoadedCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,36 +36,30 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
 
         TeaseMe.initialize(this.getApplicationContext(), "", "");
 
-        ListViewScreenConfiguration gridConfig = new ListViewScreenConfiguration(this, 36L, findViewById(R.id.gridView1));
+        ListViewScreenConfiguration gridConfig = new ListViewScreenConfiguration(this, 14L, findViewById(R.id.gridView1));
         ListViewBinder binder = new ListViewBinder(gridConfig);
 
         /**
          * web view with custom click handler
          */
 
-        WebViewScreenConfiguration web = new WebViewScreenConfiguration(this, 30L, findViewById(R.id.webView1), 6L);
+        WebViewScreenConfiguration web = new WebViewScreenConfiguration(this, 30L, findViewById(R.id.webView1), 5L);
 
-        TeaserActionHandlerRegistry handler = new TeaserActionHandlerRegistry(this);
-        handler.registerHandler(ActionType.All, new ActionHandler() {
+        ActionHandler handler = new ActionHandler() {
+
             @Override
-            public boolean canHandle(String actionType) {
+            public boolean canHandle(String actionType, String actionValue, Map<String, String> properties) {
                 return true;
             }
 
             @Override
-            public void handle(String actionType, String actionValue) {
-
-                Toast.makeText(MainActivity.this, "Tesst toast " + actionType + " " + actionValue, Toast.LENGTH_SHORT);
+            public boolean handle(String actionType, String actionValue, Map<String, String> properties) {
+                Toast.makeText(MainActivity.this, "MY TOAST " + actionValue, Toast.LENGTH_SHORT).show();
+                return true;
             }
+        };
 
-            @Override
-            public void handle(String actionType, String actionValue, Map<String, String> options) {
-                Toast.makeText(MainActivity.this, "Tesst toast " + actionType + " " + actionValue + options.toString(), Toast.LENGTH_SHORT);
-
-            }
-        });
-        WebViewBinder binder1 = new WebViewBinder.Builder(web).withHandlerRegistry(handler).build();
-
+        WebViewBinder binder1 = new WebViewBinder.Builder(web).withCustomActionHandler(handler).build();
 
         /**
          * webview 2
@@ -72,6 +73,56 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
 
 
         WebViewBinder binder2 = new WebViewBinder.Builder(web2).build();
+
+
+        /**
+         * Gridview with all custom options
+         */
+        /*
+        Map<String, String> params = new HashMap<String, String>();
+
+        params.put(TeaserFilterParameter.FSK.name(), "18");
+
+
+        ListViewScreenConfiguration lv2 = new ListViewScreenConfiguration(this, 36L, findViewById(R.id.gridView1), params);
+
+        ListViewBinder binder3 = new ListViewBinder.Builder(lv2).withCustomActionHandler(new ActionHandler() {
+            @Override
+            public boolean canHandle(String actionType, String actionValue, Map<String, String> properties) {
+                return false;
+            }
+
+            @Override
+            public boolean handle(String actionType, String actionValue, Map<String, String> properties) {
+                Toast.makeText(MainActivity.this, "MY TOAST " + actionValue, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        }).withImageTransformers(new ArrayList<Transformation>()).withItemLayoutMapper(new ItemLayoutMapper() {
+            @Override
+            public Integer getItemLayoutId(Teaser item, int position) {
+                return R.layout.default_teaser_list_item;
+            }
+
+            @Override
+            public Integer getImageViewId(Teaser item, int position) {
+                return R.id.teaser_item_image;
+            }
+
+            @Override
+            public Integer getContentViewId(Teaser item, int position) {
+                return R.id.teaser_item_content;
+            }
+
+            @Override
+            public Transformation getImageTransformationFor(Teaser item, int position) {
+                if (item.getImageAspectRatio() > 1)
+                    return new CropSquareTransformation();
+                else if (position > 2)
+                    return new CircleTransformation();
+                return null;
+            }
+        }).build();
+        */
     }
 
 
@@ -106,4 +157,6 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
     public void teasersErrored(Long screenId, View AbsListViewWebView, Throwable e) {
 
     }
+
+
 }
