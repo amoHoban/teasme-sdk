@@ -79,8 +79,8 @@ public class TeaseMeJavaScriptInterface {
 
         Log.d(this.getClass().getPackage().getName(), "Attempting to find a handler for click on teaser with actionType : " + actionType + " actionValue :" + actionValue + options.toString());
 
-
-        handlerRegistry.trackClick(actionType, actionValue, options);
+        //let the webpage handle the tracking
+        //handlerRegistry.trackClick(actionType, actionValue, options);
 
         if (actionHandler != null) {
             if (actionHandler.canHandle(actionType, actionValue, options)) {
@@ -97,14 +97,13 @@ public class TeaseMeJavaScriptInterface {
 
     @JavascriptInterface
     public void sendEvent(String actionType, String actionValue) {
-        Log.e("SOMETHING ekse is", actionType);
 
         this.sendEvent(actionType,actionValue, "{}");
     }
 
     @JavascriptInterface
-    public void sendEvent(String something) {
-        Log.e("SOMETHING is", something);
-        Toast.makeText(mContext, "SOMETHIIIING " + something, Toast.LENGTH_SHORT);
+    public void sendEvent(String param) {
+        Log.e(this.getClass().getPackage().getName(), "Handling click with param " + param);
+        this.sendEvent(param, null, null);
     }
 }

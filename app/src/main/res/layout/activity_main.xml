@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="112dp" />
 
-    <ListView
+    <GridView
         android:id="@+id/gridView1"
         android:layout_width="match_parent"
         android:layout_height="225dp"
@@ -19,7 +19,7 @@
         android:numColumns="2"
         android:layout_marginTop="230dp">
 
-    </ListView>
+    </GridView>
 
     <WebView
         android:id="@+id/webView2"
