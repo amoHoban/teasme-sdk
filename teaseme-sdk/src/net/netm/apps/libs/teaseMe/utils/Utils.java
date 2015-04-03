@@ -49,7 +49,7 @@ public class Utils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object[]) params);
         else
-            asyncTask.execute(params);
+            asyncTask.execute((Object[]) params);
     }
 
     public static int safeLongToInt(long l) {
