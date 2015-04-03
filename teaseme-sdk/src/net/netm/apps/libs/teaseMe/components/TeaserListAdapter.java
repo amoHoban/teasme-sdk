@@ -30,7 +30,7 @@ import java.util.List;
  * <p>
  * ListAdapter for Teasers. For the item layouts, you can pass either a List of
  * layout id's, one layout id (in that case each item will have the same
- * layout), or an implementation of {@link net.netm.apps.libs.teaseme.services.ItemLayoutMapper ItemLayoutMapper}</p>
+ * layout), or an implementation of {@link net.netm.apps.libs.teaseme.services.ItemLayoutMapper itemLayoutMapper}</p>
  */
 public class TeaserListAdapter extends BaseAdapter {
 
