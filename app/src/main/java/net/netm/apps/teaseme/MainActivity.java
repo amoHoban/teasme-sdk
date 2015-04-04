@@ -7,23 +7,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.squareup.picasso.Transformation;
-
 import net.netm.apps.libs.teaseme.TeaseMe;
 import net.netm.apps.libs.teaseme.handlers.ActionHandler;
 import net.netm.apps.libs.teaseme.listview.services.impl.ListViewBinder;
 import net.netm.apps.libs.teaseme.listview.services.impl.ListViewScreenConfiguration;
-import net.netm.apps.libs.teaseme.models.Teaser;
-import net.netm.apps.libs.teaseme.services.ItemLayoutMapper;
-import net.netm.apps.libs.teaseme.services.TeaserFilterParameter;
 import net.netm.apps.libs.teaseme.services.TeasersLoadedCallback;
-import net.netm.apps.libs.teaseme.utils.transformations.CircleTransformation;
-import net.netm.apps.libs.teaseme.utils.transformations.CropSquareTransformation;
 import net.netm.apps.libs.teaseme.webview.WebViewScreenConfiguration;
 import net.netm.apps.libs.teaseme.webview.services.impl.WebViewBinder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -33,6 +24,7 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         TeaseMe.initialize(this.getApplicationContext(), "", "");
 
