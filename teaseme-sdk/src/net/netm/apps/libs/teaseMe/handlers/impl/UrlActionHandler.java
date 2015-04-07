@@ -5,6 +5,7 @@ import java.util.Map;
 import net.netm.apps.libs.teaseme.handlers.ActionHandler;
 import net.netm.apps.libs.teaseme.handlers.ActionType;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
@@ -37,7 +38,13 @@ public class UrlActionHandler implements ActionHandler {
 
         Log.d(activity.getPackageName(), "Starting intent " + viewIntent);
 
-        activity.startActivity(viewIntent);
+        try {
+            activity.startActivity(viewIntent);
+        }
+        catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
 
         return true;
 

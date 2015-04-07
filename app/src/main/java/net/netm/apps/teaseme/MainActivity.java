@@ -28,7 +28,7 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
 
         TeaseMe.initialize(this.getApplicationContext(), "", "");
 
-        ListViewScreenConfiguration gridConfig = new ListViewScreenConfiguration(this, 14L, findViewById(R.id.gridView1));
+        ListViewScreenConfiguration gridConfig = new ListViewScreenConfiguration(this, 30L, findViewById(R.id.gridView1));
         ListViewBinder binder = new ListViewBinder(gridConfig);
 
         /**
