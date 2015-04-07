@@ -1,10 +1,15 @@
 package net.netm.apps.libs.teaseme.services.impl;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import android.content.Context;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
 import net.netm.apps.libs.teaseme.TeaseMe;
 import net.netm.apps.libs.teaseme.models.FilteredScreen;
@@ -18,16 +23,11 @@ import org.apache.http.client.methods.HttpHead;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ahoban on 26.03.15.
@@ -145,7 +145,7 @@ public class TeaserScreensService {
 
     public FilteredScreen getCachedVersionIfNoUpdate(String url) {
 
-        FilteredScreen cachedVersion = null;
+        FilteredScreen cachedVersion;
 
         String screenString = sqliteSource.getScreen(Utils.safeLongToInt(requestedScreenId));
 
@@ -153,16 +153,31 @@ public class TeaserScreensService {
 
         Log.e(this.getClass().getPackage().getName(), "All Screens : " + screens);
 
-
         if (screenString != null) {
 
             cachedVersion = getGson().fromJson(screenString, FilteredScreen.class);
+
+            Date remoteLastModifiedDate = getRemoteLastModifiedDate(url);
+
+            if (cachedVersion.getAccumulatedLastModifiedDate().before(remoteLastModifiedDate)) {
+                Log.d(this.getClass().getPackage().getName(), "Cached version is too old, differene: " + (remoteLastModifiedDate.getTime() - cachedVersion.getAccumulatedLastModifiedDate().getTime()));
+                sqliteSource.deleteScreen(requestedScreenId);
+                return null;
+            }
+
+            return cachedVersion;
+
 
         } else {
             // nothing in database
             Log.d(this.getClass().getPackage().getName(), "Nothing found in database for screen " + requestedScreenId);
             return null;
         }
+
+
+    }
+
+    private Date getRemoteLastModifiedDate(String url) {
 
         // HEAD the screen and get last update to compare to local version
 
@@ -173,9 +188,10 @@ public class TeaserScreensService {
         if (userAgent != null)
             head.setHeader("User-Agent", userAgent);
 
-        try {
-            Log.d(this.getClass().getPackage().getName(), "Fetching remote modified date now");
 
+        Log.d(this.getClass().getPackage().getName(), "Fetching remote modified date now");
+
+        try {
             HttpResponse response = getConfig().getHttpClient().execute(head);
 
             Header[] headers = response.getHeaders(HEADER_LAST_SCREEN_UPDATE);
@@ -183,19 +199,10 @@ public class TeaserScreensService {
             if (headers.length > 0)
                 remoteLastModifiedDate = new Date(Long.parseLong(headers[0].getValue()));
 
-            if (cachedVersion.getAccumulatedLastModifiedDate().before(remoteLastModifiedDate))
-            {
-                Log.d(this.getClass().getPackage().getName(), "Cached version is too old, differene: " + (remoteLastModifiedDate.getTime() - cachedVersion.getAccumulatedLastModifiedDate().getTime()));
-                sqliteSource.deleteScreen(requestedScreenId);
-                return null;
-            }
-
-            return cachedVersion;
-
-        } catch (IOException io) {
-            return null;
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return remoteLastModifiedDate;
     }
 
     private TeaseMe getConfig() {
