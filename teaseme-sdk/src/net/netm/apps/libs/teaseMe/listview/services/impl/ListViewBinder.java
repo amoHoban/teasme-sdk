@@ -197,7 +197,7 @@ public class ListViewBinder implements ScreenBinder<AbsListView> {
             public void run() {
 
                 if (screen == null) {
-                    ((TeasersLoadedCallback) context).teasersErrored(configuration.getScreenId(), v, teaserSource.getException());
+                    ((TeasersLoadedCallback) context).teasersErrorred(configuration.getScreenId(), v, teaserSource.getException());
                     return;
                 }
                 /**

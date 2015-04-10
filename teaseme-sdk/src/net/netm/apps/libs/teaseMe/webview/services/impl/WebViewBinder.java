@@ -88,8 +88,7 @@ public class WebViewBinder implements ScreenBinder<WebView> {
             public void onReceivedError(WebView view, int errorCode, String description,String failingUrl) {
                 if (failingUrl.toLowerCase().contains(TeaseMe.webViewUrl().toLowerCase())) {
 
-                    ((TeasersLoadedCallback) context).teasersErrored(teaserSource.getScreenId(), view,
-                            new WebViewScreenLoadException("WebView failed to load screen.", errorCode, failingUrl, teaserSource.getScreenId()));
+                    ((TeasersLoadedCallback) context).teasersErrorred(teaserSource.getScreenId(), view, new WebViewScreenLoadException("WebView failed to load screen.", errorCode, failingUrl, teaserSource.getScreenId()));
 
                 }
             }

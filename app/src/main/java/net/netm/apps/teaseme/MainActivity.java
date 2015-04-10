@@ -7,14 +7,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.squareup.picasso.Transformation;
+
 import net.netm.apps.libs.teaseme.TeaseMe;
 import net.netm.apps.libs.teaseme.handlers.ActionHandler;
 import net.netm.apps.libs.teaseme.listview.services.impl.ListViewBinder;
 import net.netm.apps.libs.teaseme.listview.services.impl.ListViewScreenConfiguration;
+import net.netm.apps.libs.teaseme.models.Teaser;
+import net.netm.apps.libs.teaseme.services.ItemLayoutMapper;
+import net.netm.apps.libs.teaseme.services.TeaserFilterParameter;
 import net.netm.apps.libs.teaseme.services.TeasersLoadedCallback;
+import net.netm.apps.libs.teaseme.utils.transformations.CircleTransformation;
+import net.netm.apps.libs.teaseme.utils.transformations.CropSquareTransformation;
 import net.netm.apps.libs.teaseme.webview.WebViewScreenConfiguration;
 import net.netm.apps.libs.teaseme.webview.services.impl.WebViewBinder;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -26,7 +35,7 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
         setContentView(R.layout.activity_main);
 
 
-        TeaseMe.initialize(this.getApplicationContext(), "", "");
+        TeaseMe.initialize(this.getApplicationContext(), "YOUR-API-KEY");
 
         ListViewScreenConfiguration gridConfig = new ListViewScreenConfiguration(this, 30L, findViewById(R.id.gridView1));
         ListViewBinder binder = new ListViewBinder(gridConfig);
@@ -70,7 +79,7 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
         /**
          * Gridview with all custom options
          */
-    /*
+
         Map<String, String> params = new HashMap<String, String>();
 
         params.put(TeaserFilterParameter.FSK.name(), "18");
@@ -107,14 +116,12 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
 
             @Override
             public Transformation getImageTransformationFor(Teaser item, int position) {
-                if (item.getImageAspectRatio() > 1)
-                    return new CropSquareTransformation();
-                else if (position > 2)
-                    return new CircleTransformation();
+                if (item.getImageAspectRatio() > 1) return new CropSquareTransformation();
+                else if (position > 2) return new CircleTransformation();
                 return null;
             }
         }).build();
-        */
+
     }
 
 
@@ -146,7 +153,7 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
     }
 
     @Override
-    public void teasersErrored(Long screenId, View AbsListViewWebView, Throwable e) {
+    public void teasersErrorred(Long screenId, View AbsListViewWebView, Throwable e) {
 
     }
 

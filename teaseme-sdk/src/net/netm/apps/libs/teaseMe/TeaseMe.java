@@ -13,6 +13,10 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import android.content.Context;
+import android.util.Base64;
+
+
+import java.util.UUID;
 
 /**
  * Created by ahoban on 27.03.15.
@@ -37,24 +41,24 @@ public class TeaseMe {
     private static final int HTTP_CLIENT_TIMEOUT_CONNECTION = 5000;
 
     private static final int HTTP_CLIENT_TIMEOUT_SOCKET = 5000;
+
+    public static final String API_KEY = "apiKey" ;
+
     private static TeaseMe mInstance = null;
     private HttpClient httpClient;
     private Context context;
-    private String appKey;
-    private String clientKey;
+    private String apiKey;
 
     /**
      * private constructor, singleton
      *
      * @param context
-     * @param appKey
-     * @param clientKey
+     * @param apiKey
      */
-    private TeaseMe(Context context, String appKey, String clientKey) {
+    private TeaseMe(Context context, String apiKey) {
         this();
         this.context = context;
-        this.appKey = appKey;
-        this.clientKey = clientKey;
+        this.apiKey = apiKey;
     }
 
     /**
@@ -110,13 +114,24 @@ public class TeaseMe {
      *
      * @param context
      * @param apiKey
-     * @param apiSecret
      */
-    public static void initialize(Context context, String apiKey, String apiSecret) {
+    public static void initialize(Context context, String apiKey) {
+
+        validateApiKey(apiKey);
+
         if (mInstance == null) {
-            mInstance = new TeaseMe(context, apiKey, apiSecret);
+            mInstance = new TeaseMe(context, apiKey);
         }
 
+    }
+
+    private static void validateApiKey(String hash) {
+        try {
+            byte[] bytes = Base64.decode(hash,Base64.DEFAULT);
+            UUID.fromString(new String(bytes));
+        } catch(Exception exception) {
+            throw new IllegalStateException("Invalid api key");
+        }
     }
 
     /**
@@ -136,7 +151,7 @@ public class TeaseMe {
      * @return true if requirements met
      */
     public boolean isInitialized() {
-        return this.appKey != null && this.clientKey != null && this.context != null;
+        return this.apiKey != null && this.context != null;
     }
 
     /**
@@ -164,4 +179,7 @@ public class TeaseMe {
     }
 
 
+    public String getApiKey() {
+        return apiKey;
+    }
 }

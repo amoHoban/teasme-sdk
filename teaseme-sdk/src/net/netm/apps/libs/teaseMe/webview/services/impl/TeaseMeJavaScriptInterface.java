@@ -54,10 +54,12 @@ public class TeaseMeJavaScriptInterface {
      * webview will send handleEvent
      *
      * @param actionType
-     * @param actionValue
+     * @param jsonOptions
      */
     @JavascriptInterface
-    public void sendEvent(String actionType, String actionValue, String jsonOptions) {
+    public void sendEvent(String actionType, String jsonOptions) {
+
+        Log.e("JSON OPTS", "JSON OPTIONS "+ jsonOptions);
 
         ActionHandler handler;
 
@@ -77,33 +79,23 @@ public class TeaseMeJavaScriptInterface {
 
         }
 
-        Log.d(this.getClass().getPackage().getName(), "Attempting to find a handler for click on teaser with actionType : " + actionType + " actionValue :" + actionValue + options.toString());
+        Log.d(this.getClass().getPackage().getName(), "Attempting to find a handler for click on teaser with actionType : " + actionType + " actionValue :" + options.get("actionValue") + options.toString());
 
         //let the webpage handle the tracking
-        //handlerRegistry.trackClick(actionType, actionValue, options);
+        handlerRegistry.trackClick(actionType, options.get("actionValue"), options);
 
         if (actionHandler != null) {
-            if (actionHandler.canHandle(actionType, actionValue, options)) {
+            if (actionHandler.canHandle(actionType, options.get("actionValue"), options)) {
 
-                if (actionHandler.handle(actionType, actionValue, options)) {
+                if (actionHandler.handle(actionType, options.get("actionValue"), options)) {
                     return;
                 }
             }
         }
-        handlerRegistry.findHandlerFor(actionType, actionValue, options).handle(actionType, actionValue, options);
+        handlerRegistry.findHandlerFor(actionType, options.get("actionValue"), options).handle(actionType, options.get("actionValue"), options);
 
 
     }
 
-    @JavascriptInterface
-    public void sendEvent(String actionType, String actionValue) {
 
-        this.sendEvent(actionType,actionValue, "{}");
-    }
-
-    @JavascriptInterface
-    public void sendEvent(String param) {
-        Log.e(this.getClass().getPackage().getName(), "Handling click with param " + param);
-        this.sendEvent(param, null, null);
-    }
 }

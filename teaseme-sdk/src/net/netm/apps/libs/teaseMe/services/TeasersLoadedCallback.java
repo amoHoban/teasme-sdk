@@ -28,7 +28,7 @@ public interface TeasersLoadedCallback {
      * @param AbsListViewWebView parameter will be the loaded webview or the loaded AbsListView with populated {@link net.netm.apps.libs.teaseme.components.TeaserListAdapter}
      * @param e the cause of the error
      */
-    public void teasersErrored(Long screenId, View AbsListViewWebView, Throwable e);
+    public void teasersErrorred(Long screenId, View AbsListViewWebView, Throwable e);
 
 
 }
