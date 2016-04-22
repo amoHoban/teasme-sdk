@@ -19,7 +19,7 @@ public interface TeasersLoadedCallback {
     public void teasersLoaded(Long screenId, View AbsListViewWebView);
 
     /**
-     <p>triggered when teasers finished loading
+     * <p>triggered when teasers finished loading
      * in case of webview when the page has a bad http status, see {@link android.webkit.WebViewClient#onReceivedError(android.webkit.WebView, int, String, String)}
      * in case of AbsListView when the adapter finished populating
      * the items from json </p>

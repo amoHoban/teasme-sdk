@@ -22,7 +22,7 @@ public class ListViewScreenConfiguration extends BasicScreenConfiguration {
      * @param view
      */
     public ListViewScreenConfiguration(Activity context, Long screenId, View view) {
-        super(context, screenId,view);
+        super(context, screenId, view);
     }
 
     /**

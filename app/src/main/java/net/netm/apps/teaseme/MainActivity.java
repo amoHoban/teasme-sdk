@@ -40,6 +40,7 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
         ListViewScreenConfiguration gridConfig = new ListViewScreenConfiguration(this, 30L, findViewById(R.id.gridView1));
         ListViewBinder binder = new ListViewBinder(gridConfig);
 
+
         /**
          * web view with custom click handler
          */
@@ -84,7 +85,7 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
 
         params.put(TeaserFilterParameter.FSK.name(), "18");
 
-
+        /*
         ListViewScreenConfiguration lv2 = new ListViewScreenConfiguration(this, 36L, findViewById(R.id.gridView1), params);
 
         ListViewBinder binder3 = new ListViewBinder.Builder(lv2).withCustomActionHandler(new ActionHandler() {
@@ -120,7 +121,7 @@ public class MainActivity extends ActionBarActivity implements TeasersLoadedCall
                 else if (position > 2) return new CircleTransformation();
                 return null;
             }
-        }).build();
+        }).build(); */
 
     }
 

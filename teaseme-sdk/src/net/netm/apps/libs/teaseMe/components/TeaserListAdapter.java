@@ -1,23 +1,17 @@
 package net.netm.apps.libs.teaseme.components;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.v4.widget.ListViewAutoScrollHelper;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Request;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Transformation;
 
@@ -40,7 +34,6 @@ public class TeaserListAdapter extends BaseAdapter {
     private final FilteredScreen screen;
     private final LayoutInflater inflater;
     private final ItemLayoutMapper layoutMapper;
-    private final AbsListView listView;
     private final List<? extends Transformation> transformers;
     private final Context context;
 
@@ -48,7 +41,6 @@ public class TeaserListAdapter extends BaseAdapter {
         this.context = configuration.getContext();
         this.inflater = LayoutInflater.from(context);
         this.layoutMapper = layoutMapper;
-        this.listView = (AbsListView) configuration.getView();
         this.screen = screen;
         this.transformers = transformer;
     }
@@ -103,7 +95,7 @@ public class TeaserListAdapter extends BaseAdapter {
 
     private ImageView getImageView(int position, View convertView, Teaser item) {
 
-        Integer imageViewId = layoutMapper.getImageViewId(item, position);
+        final Integer imageViewId = layoutMapper.getImageViewId(item, position);
 
         ImageView image;
 
@@ -123,7 +115,16 @@ public class TeaserListAdapter extends BaseAdapter {
     }
 
     private void processContent(int position, View convertView, Teaser item) {
-        TextView textView = (TextView) convertView.findViewById(layoutMapper.getContentViewId(item, position));
+        TextView textView = null;
+
+        final Integer contentViewId = layoutMapper.getContentViewId(item, position);
+
+        if (contentViewId != null) {
+            final View view = convertView.findViewById(contentViewId);
+
+            if (view != null)
+                textView = (TextView) view;
+        }
 
         if (textView == null)
             ((ViewGroup) convertView).getChildAt(1);
@@ -182,7 +183,6 @@ public class TeaserListAdapter extends BaseAdapter {
     }
 
     /**
-     *
      * @param screen the filteredScreen instance
      * @return true if has teasers
      */

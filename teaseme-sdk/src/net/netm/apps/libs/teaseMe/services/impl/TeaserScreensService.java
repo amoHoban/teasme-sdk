@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +49,12 @@ public class TeaserScreensService {
 
     public TeaserScreensService(Context context, long screenId, Map<String, String> params) {
         this.requestedScreenId = screenId;
-        this.params = params;
+
+        if (params != null)
+            this.params = params;
+        else
+            this.params = new HashMap<String, String>();
+
         this.userAgent = UserAgentUtils.getDefaultUserAgentString(context);
         this.context = context;
         GsonBuilder builder = new GsonBuilder();
@@ -134,7 +140,9 @@ public class TeaserScreensService {
 
         String url = TeaseMe.jsonUrl() + screenId;
 
-        if (params == null || params.isEmpty()) return url;
+        Log.e("TEASME", TeaseMe.getInstance().getApiKey());
+
+        params.put(TeaseMe.API_KEY, TeaseMe.getInstance().getApiKey());
 
         url += "?" + Utils.urlEncodeUTF8(params);
 

@@ -14,6 +14,7 @@ import org.apache.http.params.HttpParams;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 
 
 import java.util.UUID;
@@ -23,11 +24,11 @@ import java.util.UUID;
  */
 public class TeaseMe {
 
+    public final static String API_BASE_URL = "ENTER_API_URL";
+
     public final static String API_VERSION = "v1";
 
     public final static String API_NAMESPACE = "api";
-
-    public final static String API_BASE_URL = "http://teaseradmin.pec.test.net-m.net/teaseradmin";
 
     public final static String API_PATH = "/screens";
 
@@ -128,6 +129,7 @@ public class TeaseMe {
     private static void validateApiKey(String hash) {
         try {
             byte[] bytes = Base64.decode(hash,Base64.DEFAULT);
+            Log.e("TEeaseME", "Bytes "+ new String(bytes));
             UUID.fromString(new String(bytes));
         } catch(Exception exception) {
             throw new IllegalStateException("Invalid api key");

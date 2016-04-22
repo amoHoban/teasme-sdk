@@ -79,7 +79,7 @@ public class ListViewBinder implements ScreenBinder<AbsListView> {
         this.bindView();
     }
 
-    public void bindView() {
+    private void bindView() {
 
         // Support both fragmentActivity and Activity, solving api level issues
 
@@ -165,7 +165,6 @@ public class ListViewBinder implements ScreenBinder<AbsListView> {
         view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
 
                 Teaser item = null;
 
